@@ -26,6 +26,25 @@ The initial action set is intentionally small:
 - `jump`
 - `left`
 
+## Mac and OpenRouter support
+
+This fork adds a Mac launcher and support for OpenRouter's Decisions API while preserving
+the original Choice, Noul, and Score telemetry.
+
+```sh
+python3.13 -m venv .venv
+.venv/bin/python -m pip install -e ".[mario,dev]"
+cp .env.example .env
+# Edit .env to add your OpenRouter API key.
+./launch.command
+```
+
+The launcher uses OpenRouter when `OPENROUTER_API_KEY` is configured, otherwise a native
+TypeSafe key when available, or the offline heuristic demo when neither key is present.
+The default OpenRouter model is `typesafe/jev-1.13`. To follow new model releases, set
+`OPENROUTER_MODEL='~typesafe/jev-latest'`. Keys in `.env`, the virtual environment, and
+run artifacts are excluded from Git. See [local setup](LOCAL_SETUP.md) for controls.
+
 ## Requirements
 
 - Python 3.13 or newer

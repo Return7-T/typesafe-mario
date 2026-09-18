@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import time
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -34,7 +35,18 @@ class TypeSafePolicy:
         self._Choice = Choice
         self._Noul = Noul
         self._Score = Score
-        self._client = TypeSafeClient()
+        openrouter_key = os.environ.get("OPENROUTER_API_KEY")
+        if openrouter_key:
+            from .openrouter import OpenRouterTransport
+
+            self._client = TypeSafeClient(
+                api_key=openrouter_key,
+                model=os.environ.get("OPENROUTER_MODEL", "typesafe/jev-1.13"),
+                transport=OpenRouterTransport(),
+                timeout=30.0,
+            )
+        else:
+            self._client = TypeSafeClient()
 
     def close(self) -> None:
         close = getattr(self._client, "close", None)
